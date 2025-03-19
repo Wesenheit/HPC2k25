@@ -20,12 +20,15 @@ __global__ void sum(int* result) {
     for (int i = start; i <= end; i++) {
         partials[threadIdx.x] += i;
     }
-
+   
+    __syncthreads();
+    
     int i = blockDim.x / 2;
     while (i != 0) {
         if (threadIdx.x < i) {
             partials[threadIdx.x] += partials[threadIdx.x + i];
         }
+        __syncthreads();
         i /= 2;
     }
 

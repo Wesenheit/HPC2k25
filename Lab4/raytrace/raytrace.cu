@@ -2,10 +2,13 @@
 #include "common/errors.h"
 #include "common/cpu_bitmap.h"
 
-#define DIM 1024
-#define rnd(x) (x * rand() / RAND_MAX)
+#define DIM 4096
+#define rnd(x) (x * rand()/RAND_MAX)
 #define INF 2e10f
-#define SPHERES 100
+#define SPHERES 1600
+
+#define MAX_size 10
+
 
 struct Sphere {
 	float red, green, blue;
@@ -30,13 +33,51 @@ __global__ void kernel(Sphere *spheres, unsigned char* bitmap) {
 	int x = threadIdx.x + blockIdx.x * blockDim.x;
 	int y = threadIdx.y + blockIdx.y * blockDim.y;
 	int offset = x + y * blockDim.x * gridDim.x;
-	
+
 	float bitmapX = (x - DIM / 2);
 	float bitmapY = (y - DIM / 2);
 	
 	float red = 0, green = 0, blue = 0;
 	float maxDepth = -INF;
+
+    __shared__ Sphere local [MAX_size];
+	for (int i = 0; i < SPHERES; i+=MAX_size) { 
+        if (threadIdx.x < MAX_size && threadIdx.y == 0)
+        {
+            local[threadIdx.x] = spheres[i + threadIdx.x];
+        }
+        __syncthreads();
+        for (int j = 0; j < MAX_size; j++)
+        {
+		    float colorFalloff;
+		    float depth = local[j].hit(bitmapX, bitmapY, &colorFalloff);
+		
+		    if (depth > maxDepth) { 
+			    red = local[j].red * colorFalloff;
+			    green = local[j].green * colorFalloff;
+			    blue = local[j].blue * colorFalloff;
+			    maxDepth = depth; 
+		    }
+        }
+	}
+
+	bitmap[offset * 4 + 0] = (int) (red * 255);
+	bitmap[offset * 4 + 1] = (int) (green * 255);
+	bitmap[offset * 4 + 2] = (int) (blue * 255);
+	bitmap[offset * 4 + 3] = 255;
+}
+
+__global__ void kernel_old(Sphere *spheres, unsigned char* bitmap) {
+	int x = threadIdx.x + blockIdx.x * blockDim.x;
+	int y = threadIdx.y + blockIdx.y * blockDim.y;
+	int offset = x + y * blockDim.x * gridDim.x;
+
+	float bitmapX = (x - DIM / 2);
+	float bitmapY = (y - DIM / 2);
 	
+	float red = 0, green = 0, blue = 0;
+	float maxDepth = -INF;
+
 	for (int i = 0; i < SPHERES; i++) { 
 		float colorFalloff;
 		float depth = spheres[i].hit(bitmapX, bitmapY, &colorFalloff);
@@ -46,14 +87,15 @@ __global__ void kernel(Sphere *spheres, unsigned char* bitmap) {
 			green = spheres[i].green * colorFalloff;
 			blue = spheres[i].blue * colorFalloff;
 			maxDepth = depth; 
-		}
-	}
+        }
+    }
 
 	bitmap[offset * 4 + 0] = (int) (red * 255);
 	bitmap[offset * 4 + 1] = (int) (green * 255);
 	bitmap[offset * 4 + 2] = (int) (blue * 255);
 	bitmap[offset * 4 + 3] = 255;
 }
+
 
 struct DataBlock {
 	unsigned char *hostBitmap;
@@ -80,9 +122,9 @@ int main(void) {
 		hostSpheres[i].red = rnd(1.0f);
 		hostSpheres[i].green = rnd(1.0f);
 		hostSpheres[i].blue = rnd(1.0f);
-		hostSpheres[i].x = rnd(1000.0f) - 500;
-		hostSpheres[i].y = rnd(1000.0f) - 500;
-		hostSpheres[i].z = rnd(1000.0f) - 500;
+		hostSpheres[i].x = rnd((float) (DIM-20)) - DIM/2;
+		hostSpheres[i].y = rnd((float) (DIM-20)) - DIM/2;
+		hostSpheres[i].z = rnd((float) (DIM-20)) - DIM/2;
 		hostSpheres[i].radius = rnd(100.0f) + 20;
 	}
 	
@@ -105,7 +147,7 @@ int main(void) {
 	
 	HANDLE_ERROR(cudaMemcpy(bitmap.get_ptr(), devBitmap, bitmap.image_size(), cudaMemcpyDeviceToHost));
 	
-	//bitmap.dump_ppm("image.ppm");
+	bitmap.dump_ppm("image.ppm");
 
 	
 	cudaFree(devBitmap);
