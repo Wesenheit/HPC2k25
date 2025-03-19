@@ -41,10 +41,11 @@ __global__ void kernel(Sphere *spheres, unsigned char* bitmap) {
 	float maxDepth = -INF;
 
     __shared__ Sphere local [MAX_size];
+    int idx = threadIdx.x * blockDim.x + threadIdx.y;
 	for (int i = 0; i < SPHERES; i+=MAX_size) { 
-        if (threadIdx.x < MAX_size && threadIdx.y == 0)
+        if (idx < MAX_size)
         {
-            local[threadIdx.x] = spheres[i + threadIdx.x];
+            local[idx] = spheres[i + idx];
         }
         __syncthreads();
         for (int j = 0; j < MAX_size; j++)
