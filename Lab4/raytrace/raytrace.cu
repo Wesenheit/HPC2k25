@@ -7,7 +7,7 @@
 #define INF 2e10f
 #define SPHERES 1600
 
-#define MAX_size 10
+#define MAX_size 100
 
 
 struct Sphere {
