@@ -10,8 +10,8 @@ float cuda_malloc_test(int size, bool up) {
     HANDLE_ERROR(cudaEventCreate(&start));
     HANDLE_ERROR(cudaEventCreate(&stop));
 
-    a = (int*)malloc(size * sizeof(*a)); 
-
+    //a = (int*)malloc(size * sizeof(*a)); 
+    cudaHostAlloc(&a,size * sizeof(a),0);
     HANDLE_NULL(a);
     HANDLE_ERROR(cudaMalloc((void**)&dev_a, size * sizeof(*dev_a)));
 
@@ -29,7 +29,8 @@ float cuda_malloc_test(int size, bool up) {
     HANDLE_ERROR(cudaEventSynchronize(stop));
     HANDLE_ERROR(cudaEventElapsedTime(&elapsedTime, start, stop));
 
-    free(a);
+    //free(a);
+    cudaFreeHost(a);
     HANDLE_ERROR(cudaFree(dev_a));
     HANDLE_ERROR(cudaEventDestroy(start));
     HANDLE_ERROR(cudaEventDestroy(stop));
