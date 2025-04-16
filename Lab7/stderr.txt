@@ -1,0 +1,3 @@
+cpu-bind=MASK - chuck-51, task  0  0 [494685]: mask 0x2 set
+[chuck-51.chuck.camk.edu.pl:mpi_rank_0][rdma_param_handle_heterogeneity] All nodes involved in the job were detected to be homogeneous in terms of processors and interconnects. Setting MV2_HOMOGENEOUS_CLUSTER=1 can improve job startup performance on such systems. The following link has more details on enhancing job startup performance. http://mvapich.cse.ohio-state.edu/performance/job-startup/.
+[chuck-51.chuck.camk.edu.pl:mpi_rank_0][rdma_param_handle_heterogeneity] To suppress this warning, please set MV2_SUPPRESS_JOB_STARTUP_PERFORMANCE_WARNING to 1

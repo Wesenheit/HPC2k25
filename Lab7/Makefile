@@ -11,4 +11,5 @@ LFLAGS      := -O3
 ALL         := hello-world-seq.c
 
 all:
-	$(CC) $(LFLAGS) -o hello-world $(ALL)
+	$(CC) $(LFLAGS) -o band test_band.c
+	$(CC) $(LFLAGS) -o ring ring.c
