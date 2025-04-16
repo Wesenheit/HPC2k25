@@ -4,3 +4,4 @@
 !Makefile   
 *.s
 *.o
+*.nsys-rep
