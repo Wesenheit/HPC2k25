@@ -14,6 +14,32 @@
 
 static void runFloydWarshallParallel(Graph* graph, int numProcesses, int myRank) {
     assert(numProcesses <= graph->numVertices);
+    int m = graph->numVertices;
+    int * buffer;
+    buffer = new int[m];
+    int low = graph->firstRowIdxIncl;
+    int high = graph->lastRowIdxExcl;
+    int base = graph->numVertices / numProcesses;
+    for (int k = 0; k < m; ++k) {
+        int root = k / base; 
+        if (myRank == root)
+        {
+            MPI_Bcast(graph->data[k-low],m,MPI_INT,root,MPI_COMM_WORLD);
+        }
+        else
+        {
+            MPI_Bcast(buffer,m,MPI_INT,root,MPI_COMM_WORLD);
+        }
+        for (int i = 0; i < high-low; ++i) {
+            for (int j = 0; j < m; ++j) {
+                int pathSum = graph->data[i][k] + buffer[j];
+                if (graph->data[i][j] > pathSum) {
+                    graph->data[i][j] = pathSum;
+                }
+            }
+        }
+    }
+    delete[] buffer;
 }
 
 
@@ -74,8 +100,9 @@ int main(int argc, char *argv[]) {
     runFloydWarshallParallel(graph, numProcesses, myRank);
 
     double endTime = MPI_Wtime();
-
-    std::cerr
+    if (myRank==0)
+    {
+        std::cerr
             << "The time required for the Floyd-Warshall algorithm on a "
             << numVertices
             << "-node graph with "
@@ -83,7 +110,7 @@ int main(int argc, char *argv[]) {
             << " process(es): "
             << endTime - startTime
             << std::endl;
-
+    }
     if (showResults) {
         collectAndPrintGraph(graph, numProcesses, myRank);
     }

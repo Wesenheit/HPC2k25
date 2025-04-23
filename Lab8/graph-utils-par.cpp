@@ -11,9 +11,13 @@
 #include <algorithm>
 #include <iostream>
 int getFirstGraphRowOfProcess(int numVertices, int numProcesses, int myRank) {
-    int size = numVertices/numProcesses;
-    int out = std::min(size * myRank, numVertices);
-    return out;
+    int base = numVertices / numProcesses;
+    int extra = numVertices % numProcesses;
+    if (myRank < extra) {
+        return myRank * (base + 1);
+    } else {
+        return extra * (base + 1) + (myRank - extra) * base;
+    }
 }
 
 Graph* createAndDistributeGraph(int numVertices, int numProcesses, int myRank) {
@@ -43,7 +47,7 @@ Graph* createAndDistributeGraph(int numVertices, int numProcesses, int myRank) {
         {
             int low_rank = getFirstGraphRowOfProcess(numVertices, numProcesses, RankToSend);
             int high_rank = getFirstGraphRowOfProcess(numVertices, numProcesses, RankToSend + 1);
-            for (int i = 0;i < high_rank-low_rank;i++)
+            for (int i = low_rank;i < high_rank;i++)
             {
                 initializeGraphRow(buffer, i, graph->numVertices);
                 MPI_Send(buffer,graph->numVertices,MPI_INT,RankToSend,0,MPI_COMM_WORLD);
