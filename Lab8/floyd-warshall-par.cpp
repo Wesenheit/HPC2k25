@@ -14,8 +14,6 @@
 
 static void runFloydWarshallParallel(Graph* graph, int numProcesses, int myRank) {
     assert(numProcesses <= graph->numVertices);
-
-    /* FIXME: implement */
 }
 
 

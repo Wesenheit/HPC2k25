@@ -8,20 +8,23 @@
 #include <mpi.h>
 #include "graph-base.h"
 #include "graph-utils.h"
-
+#include <algorithm>
+#include <iostream>
 int getFirstGraphRowOfProcess(int numVertices, int numProcesses, int myRank) {
-    /* FIXME: implement */
-    return myRank;
+    int size = numVertices/numProcesses;
+    int out = std::min(size * myRank, numVertices);
+    return out;
 }
 
 Graph* createAndDistributeGraph(int numVertices, int numProcesses, int myRank) {
     assert(numProcesses >= 1 && myRank >= 0 && myRank < numProcesses);
+    int low = getFirstGraphRowOfProcess(numVertices, numProcesses, myRank);
+    int high = getFirstGraphRowOfProcess(numVertices, numProcesses, myRank + 1);
 
     auto graph = allocateGraphPart(
             numVertices,
-            getFirstGraphRowOfProcess(numVertices, numProcesses, myRank),
-            getFirstGraphRowOfProcess(numVertices, numProcesses, myRank + 1)
-    );
+            low,
+            high);
 
     if (graph == nullptr) {
         return nullptr;
@@ -29,9 +32,36 @@ Graph* createAndDistributeGraph(int numVertices, int numProcesses, int myRank) {
 
     assert(graph->numVertices > 0 && graph->numVertices == numVertices);
     assert(graph->firstRowIdxIncl >= 0 && graph->lastRowIdxExcl <= graph->numVertices);
-
-    /* FIXME: implement */
-
+    if (myRank == 0)
+    {
+        int *buffer;
+        buffer = new int[graph->numVertices];
+        for (int i = 0;i < high-low;i++) initializeGraphRow(graph->data[i], i, graph->numVertices);
+        int RankToSend = 1;
+        
+        while (RankToSend < numProcesses)
+        {
+            int low_rank = getFirstGraphRowOfProcess(numVertices, numProcesses, RankToSend);
+            int high_rank = getFirstGraphRowOfProcess(numVertices, numProcesses, RankToSend + 1);
+            for (int i = 0;i < high_rank-low_rank;i++)
+            {
+                initializeGraphRow(buffer, i, graph->numVertices);
+                MPI_Send(buffer,graph->numVertices,MPI_INT,RankToSend,0,MPI_COMM_WORLD);
+            }
+            RankToSend++;
+        }
+        delete[] buffer;
+    }
+    else
+    {
+        MPI_Status stat;
+        for (int i = 0; i < high-low;i++)
+        {
+            MPI_Recv(graph->data[i],graph->numVertices,MPI_INT,0,0,MPI_COMM_WORLD,&stat);
+        }
+    }
+    for (int i = 0; i < high-low; i++) {
+    }
     return graph;
 }
 
@@ -40,7 +70,26 @@ void collectAndPrintGraph(Graph* graph, int numProcesses, int myRank) {
     assert(graph->numVertices > 0);
     assert(graph->firstRowIdxIncl >= 0 && graph->lastRowIdxExcl <= graph->numVertices);
 
-    /* FIXME: implement */
+    int low = getFirstGraphRowOfProcess(graph -> numVertices, numProcesses, myRank);
+    int high = getFirstGraphRowOfProcess(graph -> numVertices, numProcesses, myRank + 1);
+    int dummy = 0;
+    MPI_Status stat;
+    if (myRank == 0)
+    {
+        for (int i = 0; i < high-low; i++) {
+            printGraphRow(graph->data[i], i, graph->numVertices);
+        }
+        MPI_Send(&dummy,1,MPI_INT,myRank+1,0,MPI_COMM_WORLD);
+        MPI_Recv(&dummy,1,MPI_INT,numProcesses-1,0,MPI_COMM_WORLD,&stat);
+    }
+    else
+    {
+        MPI_Recv(&dummy,1,MPI_INT,myRank-1,0,MPI_COMM_WORLD,&stat);
+        for (int i = 0; i < high-low; i++) {
+            printGraphRow(graph->data[i], i, graph->numVertices);
+        }
+        MPI_Send(&dummy,1,MPI_INT,(myRank+1) % numProcesses,0,MPI_COMM_WORLD);
+    }
 }
 
 void destroyGraph(Graph* graph, int numProcesses, int myRank) {
