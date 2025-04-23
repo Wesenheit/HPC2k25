@@ -10,6 +10,18 @@
 #include <mpi.h>
 #include "graph-base.h"
 #include "graph-utils.h"
+#include <algorithm>
+int getProcessOfElement(int k, int numVertices, int numProcesses) {
+    int base = numVertices / numProcesses;
+    int extra = numVertices % numProcesses;
+    int threshold = (base + 1) * extra;
+
+    if (k < threshold) {
+        return k / (base + 1);
+    } else {
+        return extra + (k - threshold) / base;
+    }
+}
 
 
 static void runFloydWarshallParallel(Graph* graph, int numProcesses, int myRank) {
@@ -20,16 +32,16 @@ static void runFloydWarshallParallel(Graph* graph, int numProcesses, int myRank)
     int low = graph->firstRowIdxIncl;
     int high = graph->lastRowIdxExcl;
     int base = graph->numVertices / numProcesses;
+    int root = 0;
+    int jump = base;
+    int thres = jump;
     for (int k = 0; k < m; ++k) {
-        int root = k / base; 
+        root = getProcessOfElement(k,m,numProcesses);
         if (myRank == root)
         {
-            MPI_Bcast(graph->data[k-low],m,MPI_INT,root,MPI_COMM_WORLD);
+            std::copy(graph->data[k-low],graph->data[k-low] + m,buffer);
         }
-        else
-        {
-            MPI_Bcast(buffer,m,MPI_INT,root,MPI_COMM_WORLD);
-        }
+        MPI_Bcast(buffer,m,MPI_INT,root,MPI_COMM_WORLD);
         for (int i = 0; i < high-low; ++i) {
             for (int j = 0; j < m; ++j) {
                 int pathSum = graph->data[i][k] + buffer[j];
@@ -111,6 +123,7 @@ int main(int argc, char *argv[]) {
             << endTime - startTime
             << std::endl;
     }
+    MPI_Barrier(MPI_COMM_WORLD);
     if (showResults) {
         collectAndPrintGraph(graph, numProcesses, myRank);
     }
