@@ -1,0 +1,10 @@
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/parfor.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/tasks-fib.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/tasks-trib.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/nqueens.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/edit_cache.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/rebuild_cache.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/list_install_components.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/install.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/install/local.dir
+/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/CMakeFiles/install/strip.dir

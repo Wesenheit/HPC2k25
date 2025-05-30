@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wall -rdynamic -Wl,--dependency-file=CMakeFiles/tasks-trib.dir/link.d "CMakeFiles/tasks-trib.dir/tasks-trib.cpp.o" -o tasks-trib  /usr/lib64/libtbb.so

@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wall -rdynamic -Wl,--dependency-file=CMakeFiles/parfor.dir/link.d CMakeFiles/parfor.dir/parfor.cpp.o -o parfor  /usr/lib64/libtbb.so

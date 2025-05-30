@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wall -rdynamic -Wl,--dependency-file=CMakeFiles/nqueens.dir/link.d CMakeFiles/nqueens.dir/nqueens.cpp.o -o nqueens  /usr/lib64/libtbb.so
