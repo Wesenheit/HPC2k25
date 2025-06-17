@@ -1,1 +1,1 @@
-/usr/bin/c++ -g -Wall -rdynamic -Wl,--dependency-file=CMakeFiles/nqueens.dir/link.d CMakeFiles/nqueens.dir/nqueens.cpp.o -o nqueens  /usr/lib64/libtbb.so
+/usr/bin/c++ -g -Wall -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/nqueens.dir/nqueens.cpp.o -o nqueens  /opt/homebrew/lib/libtbb.dylib

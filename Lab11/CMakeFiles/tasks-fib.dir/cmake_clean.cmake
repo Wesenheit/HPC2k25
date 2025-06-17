@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/tasks-fib.dir/link.d"
   "CMakeFiles/tasks-fib.dir/tasks-fib.cpp.o"
   "CMakeFiles/tasks-fib.dir/tasks-fib.cpp.o.d"
   "tasks-fib"

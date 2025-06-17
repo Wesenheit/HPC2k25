@@ -8,8 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/parfor.cpp" "CMakeFiles/parfor.dir/parfor.cpp.o" "gcc" "CMakeFiles/parfor.dir/parfor.cpp.o.d"
-  "" "parfor" "gcc" "CMakeFiles/parfor.dir/link.d"
+  "/Users/mitra/Files/CS/MIMUW/HPC2k25/Lab11/parfor.cpp" "CMakeFiles/parfor.dir/parfor.cpp.o" "gcc" "CMakeFiles/parfor.dir/parfor.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

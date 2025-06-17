@@ -12,11 +12,11 @@
  */
 class Graph {
 public:
-    int** data;
-    int* extraRow;
-    int numVertices;
-    int firstRowIdxIncl;
-    int lastRowIdxExcl;
+  int **data;
+  int *extraRow;
+  int numVertices;
+  int firstRowIdxIncl;
+  int lastRowIdxExcl;
 };
 
 /**
@@ -26,23 +26,24 @@ public:
  * entire rows from firstRowIdxIncl (inclusive)
  * to lastRowIdxExcl (exclusive).
  */
-Graph* allocateGraphPart(int numVertices, int firstRowIdxIncl, int lastRowIdxExcl);
+Graph *allocateGraphPart(int numVertices, int firstRowIdxIncl,
+                         int lastRowIdxExcl);
 
 /**
  * Initializes a single row of a graph either with
  * random or deterministically selected elements.
  */
-void initializeGraphRow(int* row, int rowIdx, int numVertices);
+void initializeGraphRow(int *row, int rowIdx, int numVertices);
 
 /**
  * Prints a single row of a graph matrix
  * to the standard output.
  */
-void printGraphRow(int const* row, int rowIdx, int numVertices);
+void printGraphRow(int const *row, int rowIdx, int numVertices);
 
 /**
  * Frees a fragment of a graph matrix.
  */
-void freeGraphPart(Graph* graph);
+void freeGraphPart(Graph *graph);
 
 #endif /* __MY_GRAPH_BASE__H__ */

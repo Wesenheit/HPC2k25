@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/nqueens.dir/link.d"
   "CMakeFiles/nqueens.dir/nqueens.cpp.o"
   "CMakeFiles/nqueens.dir/nqueens.cpp.o.d"
   "nqueens"

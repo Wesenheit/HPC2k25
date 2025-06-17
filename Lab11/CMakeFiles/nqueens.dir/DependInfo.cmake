@@ -8,8 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/nqueens.cpp" "CMakeFiles/nqueens.dir/nqueens.cpp.o" "gcc" "CMakeFiles/nqueens.dir/nqueens.cpp.o.d"
-  "" "nqueens" "gcc" "CMakeFiles/nqueens.dir/link.d"
+  "/Users/mitra/Files/CS/MIMUW/HPC2k25/Lab11/nqueens.cpp" "CMakeFiles/nqueens.dir/nqueens.cpp.o" "gcc" "CMakeFiles/nqueens.dir/nqueens.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

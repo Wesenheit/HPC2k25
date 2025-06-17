@@ -8,8 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/wesenheit/Files/CS/MIMUW/HPC2k25/Lab11/tasks-trib.cpp" "CMakeFiles/tasks-trib.dir/tasks-trib.cpp.o" "gcc" "CMakeFiles/tasks-trib.dir/tasks-trib.cpp.o.d"
-  "" "tasks-trib" "gcc" "CMakeFiles/tasks-trib.dir/link.d"
+  "/Users/mitra/Files/CS/MIMUW/HPC2k25/Lab11/tasks-trib.cpp" "CMakeFiles/tasks-trib.dir/tasks-trib.cpp.o" "gcc" "CMakeFiles/tasks-trib.dir/tasks-trib.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
